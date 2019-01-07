@@ -1,12 +1,13 @@
+#requires -version 5.0
 <#!
 .SYNOPSIS
 	Email Employee's as their pasword nears experation
 .DESCRIPTION
-	Find password experasions and email users as the dealine nears.  
+	Find password experasions and email users as the deadline nears.  
 .NOTES
-	File Name: ADInventory.ps1
+	File Name: Expiring_password_email.ps1
 	Author: Mathew Ealy
-	Requires Powershell 2.0
+	Requires Powershell 5.0
 .LINK
 	https://github.com/MEaly58
 #>
