@@ -360,12 +360,6 @@ $erroractionpreference = "SilentlyContinue"
 
 #Gather info from user.
 Write-Host "********************************" 	-ForegroundColor Green
-Write-Host "Computer Inventory Script" 			-ForegroundColor Green
-Write-Host "By: Jesse Hamrick" 					-ForegroundColor Green
-Write-Host "Created: 04/15/2009" 				-ForegroundColor Green
-Write-Host "Contact: www.PowerShellPro.com" 	-ForegroundColor Green
-Write-Host "********************************" 	-ForegroundColor Green
-Write-Host " "
 Write-Host "Admin rights are required to enumerate information." 	-ForegroundColor Green
 Write-Host "Would you like to use an alternative credential?"		-ForegroundColor Green
 $credResponse = Read-Host "[Y] Yes, [N] No"
