@@ -1,18 +1,3 @@
-<#
-The sample scripts are not supported under any Microsoft standard support 
-program or service. The sample scripts are provided AS IS without warranty  
-of any kind. Microsoft further disclaims all implied warranties including,  
-without limitation, any implied warranties of merchantability or of fitness for 
-a particular purpose. The entire risk arising out of the use or performance of  
-the sample scripts and documentation remains with you. In no event shall 
-Microsoft, its authors, or anyone else involved in the creation, production, or 
-delivery of the scripts be liable for any damages whatsoever (including, 
-without limitation, damages for loss of business profits, business interruption, 
-loss of business information, or other pecuniary loss) arising out of the use 
-of or inability to use the sample scripts or documentation, even if Microsoft 
-has been advised of the possibility of such damages.
-#> 
-
 #requires -Version 2
 
 Function Get-OSCServiceList
@@ -25,17 +10,17 @@ Function Get-OSCServiceList
 	.PARAMETER $FilePath
 	Get the path of specified CSV file
 	.PARAMETER $ComputerName
-	Get the specified computer 
+	Get the specified computer
 	.PARAMETER $UserName
-	Get the specified UserName 
+	Get the specified UserName
 	.EXAMPLE
 	Get-OSCServiceList -FilePath "C:\New Text Document.csv"  -UserName "ADMINISTRATOR"
-	
+
 	List all services that using "administrator" as start account in computer(s) in the CSV file.
 	.EXAMPLE
 	Get-OSCServiceList -Computer "MININT-I5DE0FO" -UserName "ADMINISTRATOR"
-	
-	List all services that using "administrator" as start account in "MININT-I5DE0FO".	
+
+	List all services that using "administrator" as start account in "MININT-I5DE0FO".
 #>
 	[CmdletBinding()]
 	Param
@@ -51,42 +36,42 @@ Function Get-OSCServiceList
 	Switch($pscmdlet.ParameterSetName)
 	{
 		"FilePath"
-		{	
+		{
 			$Computers = Import-Csv  -Path $FilePath
 			foreach ($computer in $Computers)
-			{	
+			{
 				$ComputerName = $computer.ComputerName
 				CheckServicesOnComputer $ComputerName $UserName
 			}
 		}
 		"ComputerName"
 		{
-			CheckServicesOnComputer $ComputerName $UserName		 
+			CheckServicesOnComputer $ComputerName $UserName
 		}
 	}
 }
 
 Function Set-OSCServicePSW
-{	
+{
 <#
 	.SYNOPSIS
 	Function Set-OSCServicePSW is an advanced function which can set the new password for the specified service.
 	.DESCRIPTION
 	Function Set-OSCServicePSW is an advanced function which can set the new password for the specified service.
 	.PARAMETER $ComputerName
-	Get the specified computer 
+	Get the specified computer
 	.PARAMETER $ServiceName
 	Get the specified service
 	.PARAMETER $UserName
 	Get the specified user
 	.PARAMETER $NewPSW
-	Set the new password 
-	
+	Set the new password
+
 	.EXAMPLE
 	Set-OSCServicePSW -ComputerName "MININT-I5DE0FO" -ServiceName "Spooler" -UserName "administrator" -NewPSW 12345678
-	
+
 	Set the new password "12345678" for "administrator" to the service "Spooler"
-#>	
+#>
 	[CmdletBinding()]
 	Param
 	(
@@ -102,7 +87,7 @@ Function Set-OSCServicePSW
 	If(Test-Connection -ComputerName $ComputerName)
 	{
 		#Get the specified service
-		$Service = Get-WmiObject win32_service -ComputerName $ComputerName -property name, startname, caption | 
+		$Service = Get-WmiObject win32_service -ComputerName $ComputerName -property name, startname, caption |
 			Where-Object { $_.Name -match $ServiceName}
 		#Chech for the service
 		If($Service -eq $null)
@@ -110,7 +95,7 @@ Function Set-OSCServicePSW
 			Write-Warning "The $ServiceName does not exist."
 		}
 		Else
-		{	
+		{
 			#Get the result of changing the password
 			$Result = $Service.Change($null,$null,$null,$null,$null,$null, $UserName, $NewPassWord)
 			#If the return value equals 0,success to set the password
@@ -120,13 +105,13 @@ Function Set-OSCServicePSW
 			}
 			#If the return value does not equal 0 ,fail to set the password
 			Else
-			{	
+			{
 				Write-Host "Fail to set new password,please ensure the username valid and you have the permission."
 			}
-		}	
+		}
 	}
-	Else 
-	{	
+	Else
+	{
 		Write-Warning "Can not connect to the computer $ComputerName,please close the firewall or make it online"
 	}
 }
@@ -137,15 +122,15 @@ Function CheckServicesOnComputer($strComputer,$UserName)
 	If(Test-Connection -ComputerName $strComputer -ErrorAction SilentlyContinue)
 	{
 		#Get services
-	    $Services = Get-WmiObject win32_service -ComputerName $strComputer -property name, startname, caption | 
-		Where-Object { $_.startname -match $UserName}  
+	    $Services = Get-WmiObject win32_service -ComputerName $strComputer -property name, startname, caption |
+		Where-Object { $_.startname -match $UserName}
 		#If the $services is empty
 		If($Services -eq $null)
 		{
 			Write-Warning "Some error occur in $strComputer  or there is no service start up with $UserName in $strComputer"
 		}
 		Else
-		{	
+		{
 			#List services
 			$Services | Select-Object -Property @{Name="Name";Expression={$_.Name}},`
 												@{Name="StartWithAccount";Expression={$_.StartName}},`
@@ -153,9 +138,8 @@ Function CheckServicesOnComputer($strComputer,$UserName)
 												@{Name="Computer";Expression={$strComputer}}
 		}
 	}
-	Else 
+	Else
 	{
 		Write-Warning "Can not connect to the computer $strComputer,please close the firewall or make it online"
 	}
 }
-    
