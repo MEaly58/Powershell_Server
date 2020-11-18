@@ -1,6 +1,6 @@
 param([string]$ComputerName = 'localhost' ,[datetime]$StartTimestamp, [datetime]$EndTimestamp,[string]$LogfileExtension = 'log')
 
-## Define drives to look for log Logfiles
+## Define drives to look for Log files
 if($ComputerName -eq 'localhost'){
   $Location = (Get-CimInstance -ClassName Win32_LogicalDisk - Filter "DriveType = '3'").DeviceID
 }
